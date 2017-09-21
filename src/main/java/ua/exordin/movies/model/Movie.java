@@ -1,4 +1,4 @@
-package ua.movies.service.model;
+package ua.exordin.movies.model;
 
 import java.util.Date;
 

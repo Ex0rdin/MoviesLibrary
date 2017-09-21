@@ -1,4 +1,4 @@
-package ua.movies.service.controller;
+package ua.exordin.movies.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
