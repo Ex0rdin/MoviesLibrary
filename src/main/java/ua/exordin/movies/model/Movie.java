@@ -1,6 +1,6 @@
 package ua.exordin.movies.model;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class Movie {
 
