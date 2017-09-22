@@ -12,7 +12,7 @@ import ua.exordin.movies.model.Movie;
 import ua.exordin.movies.service.MovieService;
 import ua.exordin.movies.util.Constants;
 
-import java.sql.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping(Constants.CONTROLLER_MAPPING_ROOT)
@@ -30,7 +30,6 @@ public class MovieController {
      * @param compBuilder Spring components builder
      * @return Spring response entity on successfully created or already present Movie Entity
      */
-
     @SuppressWarnings("unchecked")
     @RequestMapping(value = Constants.ENTITY + "/", method = RequestMethod.POST)
     public ResponseEntity<?> createMovie(@RequestBody Movie movie, UriComponentsBuilder compBuilder) {
@@ -42,7 +41,7 @@ public class MovieController {
         if (movieService.isMovieExist(movie)) {
             logger.error("Movie record {} already exists", movie.getName());
 
-            responseEntity = new ResponseEntity(String.format("Movie record {} already exists", movie.getName()), HttpStatus.CONFLICT);
+            responseEntity = new ResponseEntity(String.format("Movie record %s already exists", movie.getName()), HttpStatus.CONFLICT);
         } else {
             movieService.saveMovie(movie);
 
@@ -57,45 +56,88 @@ public class MovieController {
 
     /**
      * GET method for getting Movie by name and additional optional paramters
-     * @param name Movie name
-     * @param premierDate date of Movie release
-     * @param durationInMinutes Movie duration
+     * @param id Movie id
      * @return Spring response entity on successfully fetched or absent Movie entity
      */
-
-
-    //TODO Narrow search criteria, since there could be more than one movie with such name ?
     @SuppressWarnings("unchecked")
-    @RequestMapping(value = Constants.ENTITY + "/{name}", method = RequestMethod.GET)
-    public ResponseEntity<?> getMovie(@PathVariable("name") String name,
-                                      @RequestParam(value="premierDate", required = false) Date premierDate,
-                                      @RequestParam(value="durationInMinutes", required = false) int durationInMinutes) {
-        logger.info("Getting Movie {}", name);
+    @RequestMapping(value = Constants.ENTITY + "/{id}", method = RequestMethod.GET)
+    public ResponseEntity<?> getMovie(@PathVariable("id") long id) {
+        logger.info("Getting Movie {}", id);
 
         ResponseEntity responseEntity = null;
 
         //TODO How to perform selective request according to passed parameters ?
-        Movie movie = movieService.findMovie(name, premierDate, durationInMinutes);
+        Movie movie = movieService.findMovie(id);
 
         //TODO Use Optional?
         if (movie == null) {
-            logger.error("Movie name: {}, premierDate: {}, durationInMinutes: {}, not found",
-                    name, premierDate, durationInMinutes);
-            responseEntity = new ResponseEntity(String.format("Movie name: {}, premierDate: {}, durationInMinutes: {}, not found",
-                    name, premierDate, durationInMinutes), HttpStatus.NOT_FOUND);
+            logger.error("Movie with id: {}, not found", id);
+            responseEntity = new ResponseEntity(String.format("Movie with id: %d, not found", id), HttpStatus.NOT_FOUND);
         } else {
-            responseEntity = new ResponseEntity<Movie>(movie, HttpStatus.OK);
+            responseEntity = new ResponseEntity<>(movie, HttpStatus.OK);
         }
 
         return responseEntity;
     }
 
-    //TODO GET ALL
 
-    //TODO PUT
+    @RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
+    public ResponseEntity<?> getUser(@PathVariable("id") long id) {
+        logger.info("Fetching User with id {}", id);
+        User user = userService.findById(id);
+        if (user == null) {
+            logger.error("User with id {} not found.", id);
+            return new ResponseEntity(new CustomErrorType("User with id " + id
+                    + " not found"), HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<User>(user, HttpStatus.OK);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /**
+     * GET method for collecting all existing Movies
+     * @return  Spring response entity on successfully fetched or absent Movies entities
+     */
+    @RequestMapping(value = Constants.ENTITY + "/", method = RequestMethod.GET)
+    public ResponseEntity<List<Movie>> listAllMovies() {
+        logger.info("Retrieving all movies");
+
+        ResponseEntity responseEntity = null;
+
+        List<Movie> movies = movieService.findAllMovies();
+        if (movies.isEmpty()) {
+            logger.warn("No movies found");
+            responseEntity = new ResponseEntity(HttpStatus.NOT_FOUND);
+        } else {
+            responseEntity = new ResponseEntity<List<Movie>>(movies, HttpStatus.OK);
+        }
+
+        return responseEntity;
+    }
+
+    //TODO PUT What if name is not unique?
+
+
 
     //TODO DELETE
 
+    //TODO DELETE ALL
+
+
     //TODO RATING
+
+
 
 }

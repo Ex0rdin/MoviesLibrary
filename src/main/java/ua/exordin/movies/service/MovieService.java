@@ -2,7 +2,6 @@ package ua.exordin.movies.service;
 
 import ua.exordin.movies.model.Movie;
 
-import java.sql.Date;
 import java.util.List;
 
 public interface MovieService {
@@ -13,7 +12,7 @@ public interface MovieService {
 
     void deleteMovie(long id);
 
-    Movie findMovie(String name, Date premierDate, int durationInMinutes);
+    Movie findMovie(long id);
 
     List<Movie> findAllMovies();
 

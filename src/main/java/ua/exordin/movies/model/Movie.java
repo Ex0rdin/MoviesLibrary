@@ -4,6 +4,7 @@ import java.sql.Date;
 
 public class Movie {
 
+    private long id;
     private String name;
     private String description;
     private Date premierDate;
@@ -11,7 +12,8 @@ public class Movie {
     private int budgetInDollars;
     private float rating;
 
-    public Movie(String name, String description, Date premierDate, int durationInMinutes, int budgetInDollars, float rating) {
+    public Movie(long id, String name, String description, Date premierDate, int durationInMinutes, int budgetInDollars, float rating) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.premierDate = premierDate;
@@ -20,52 +22,64 @@ public class Movie {
         this.rating = rating;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public Movie() {
+        id = 0;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public long getId() {
+        return id;
     }
 
-    public void setPremierDate(Date premierDate) {
-        this.premierDate = premierDate;
-    }
-
-    public void setDurationInMinutes(int durationInMinutes) {
-        this.durationInMinutes = durationInMinutes;
-    }
-
-    public void setBudgetInDollars(int budgetInDollars) {
-        this.budgetInDollars = budgetInDollars;
-    }
-
-    public void setRating(float rating) {
-        this.rating = rating;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getDescription() {
         return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Date getPremierDate() {
         return premierDate;
     }
 
+    public void setPremierDate(Date premierDate) {
+        this.premierDate = premierDate;
+    }
+
     public int getDurationInMinutes() {
         return durationInMinutes;
+    }
+
+    public void setDurationInMinutes(int durationInMinutes) {
+        this.durationInMinutes = durationInMinutes;
     }
 
     public int getBudgetInDollars() {
         return budgetInDollars;
     }
 
+    public void setBudgetInDollars(int budgetInDollars) {
+        this.budgetInDollars = budgetInDollars;
+    }
+
     public float getRating() {
         return rating;
+    }
+
+    public void setRating(float rating) {
+        this.rating = rating;
     }
 
     @Override
@@ -73,21 +87,23 @@ public class Movie {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Movie that = (Movie) o;
+        Movie movie = (Movie) o;
 
-        if (durationInMinutes != that.durationInMinutes) return false;
-        if (budgetInDollars != that.budgetInDollars) return false;
-        if (Float.compare(that.rating, rating) != 0) return false;
-        if (!name.equals(that.name)) return false;
-        if (!description.equals(that.description)) return false;
-        return premierDate.equals(that.premierDate);
+        if (id != movie.id) return false;
+        if (durationInMinutes != movie.durationInMinutes) return false;
+        if (budgetInDollars != movie.budgetInDollars) return false;
+        if (Float.compare(movie.rating, rating) != 0) return false;
+        if (name != null ? !name.equals(movie.name) : movie.name != null) return false;
+        if (description != null ? !description.equals(movie.description) : movie.description != null) return false;
+        return premierDate != null ? premierDate.equals(movie.premierDate) : movie.premierDate == null;
     }
 
     @Override
     public int hashCode() {
-        int result = name.hashCode();
-        result = 31 * result + description.hashCode();
-        result = 31 * result + premierDate.hashCode();
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (premierDate != null ? premierDate.hashCode() : 0);
         result = 31 * result + durationInMinutes;
         result = 31 * result + budgetInDollars;
         result = 31 * result + (rating != +0.0f ? Float.floatToIntBits(rating) : 0);
@@ -97,7 +113,8 @@ public class Movie {
     @Override
     public String toString() {
         return "Movie{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", premierDate=" + premierDate +
                 ", durationInMinutes=" + durationInMinutes +
