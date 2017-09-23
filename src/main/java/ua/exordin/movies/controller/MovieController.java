@@ -159,10 +159,19 @@ public class MovieController {
         return responseEntity;
     }
 
-    //TODO DELETE ALL
 
+    /**
+     * DELETE method to delete all existing Movies
+     * @return Spring response entity on successful delete of all Movies
+     */
+    @RequestMapping(value = Constants.ENTITY + "/", method = RequestMethod.DELETE)
+    public ResponseEntity<Movie> deleteAllMovies() {
+        logger.info("WARNING! Deleting all Movies!");
+
+        movieService.deleteAllMovies();
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
     //TODO RATING
-
 
 }
