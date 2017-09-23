@@ -66,7 +66,6 @@ public class MovieController {
 
         ResponseEntity responseEntity = null;
 
-        //TODO How to perform selective request according to passed parameters ?
         Movie movie = movieService.findMovie(id);
 
         //TODO Use Optional?
@@ -135,12 +134,35 @@ public class MovieController {
         return responseEntity;
     }
 
+    /**
+     * DELETE method to delete existing Movie
+     * @param id Movie id
+     * @return Spring response entity on successful delete or absent Movie entity
+     */
+    @SuppressWarnings("unchecked")
+    @RequestMapping(value = Constants.ENTITY + "/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity deleteMovie(@PathVariable("id") long id) {
+        logger.info("Deleting Movie with id: {}" , id);
 
-    //TODO DELETE
+        ResponseEntity responseEntity = null;
+
+        Movie movie = movieService.findMovie(id);
+        if (movie == null) {
+            logger.error("Have not deleted movie with id {}. It does not exist.", id);
+            responseEntity = new ResponseEntity(String.format("Have not deleted movie with id %s. It does not exist.", id),
+                    HttpStatus.NOT_FOUND);
+        } else {
+            movieService.deleteMovie(id);
+            responseEntity = new ResponseEntity<Movie>(HttpStatus.NO_CONTENT);
+        }
+
+        return responseEntity;
+    }
 
     //TODO DELETE ALL
 
 
     //TODO RATING
+
 
 }
