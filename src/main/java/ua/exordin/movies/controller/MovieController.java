@@ -80,32 +80,6 @@ public class MovieController {
         return responseEntity;
     }
 
-
-    @RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getUser(@PathVariable("id") long id) {
-        logger.info("Fetching User with id {}", id);
-        User user = userService.findById(id);
-        if (user == null) {
-            logger.error("User with id {} not found.", id);
-            return new ResponseEntity(new CustomErrorType("User with id " + id
-                    + " not found"), HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<User>(user, HttpStatus.OK);
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     /**
      * GET method for collecting all existing Movies
      * @return  Spring response entity on successfully fetched or absent Movies entities
@@ -127,8 +101,39 @@ public class MovieController {
         return responseEntity;
     }
 
-    //TODO PUT What if name is not unique?
+    /**
+     * PUT method for updating Movie
+     * @param id Movie id
+     * @param movie Movie entity
+     * @return Spring response entity on successful update or absent Movie entity
+     */
+    @SuppressWarnings("unchecked")
+    @RequestMapping(value = Constants.ENTITY + "/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<?> updateMovie(@PathVariable("id") long id, @RequestBody Movie movie) {
+        logger.info("Updating Movie with id: {}", id);
 
+        ResponseEntity responseEntity = null;
+
+        Movie foundMovie = movieService.findMovie(id);
+
+        if (foundMovie == null) {
+            logger.error("Failed to update Movie with id: {}. It was not found.", id);
+            responseEntity = new ResponseEntity(String.format("Failed to update Movie with id: %s. It was not found.", id),
+                    HttpStatus.NOT_FOUND);
+        } else {
+            foundMovie.setName(movie.getName());
+            foundMovie.setDescription(movie.getDescription());
+            foundMovie.setPremierDate(movie.getPremierDate());
+            foundMovie.setDurationInMinutes(movie.getDurationInMinutes());
+            foundMovie.setBudgetInDollars(movie.getBudgetInDollars());
+            foundMovie.setRating(movie.getRating()); //???????
+
+            movieService.updateMovie(foundMovie);
+            responseEntity = new ResponseEntity<Movie>(foundMovie, HttpStatus.OK);
+        }
+
+        return responseEntity;
+    }
 
 
     //TODO DELETE
@@ -137,7 +142,5 @@ public class MovieController {
 
 
     //TODO RATING
-
-
 
 }
