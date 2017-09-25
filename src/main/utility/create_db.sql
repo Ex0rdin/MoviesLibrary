@@ -1,0 +1,4 @@
+CREATE DATABASE "MoviesDB"
+  WITH ENCODING='UTF8'
+       OWNER=oosiennikov
+       CONNECTION LIMIT=-1;

@@ -125,7 +125,6 @@ public class MovieController {
             foundMovie.setPremierDate(movie.getPremierDate());
             foundMovie.setDurationInMinutes(movie.getDurationInMinutes());
             foundMovie.setBudgetInDollars(movie.getBudgetInDollars());
-            foundMovie.setRating(movie.getRating()); //???????
 
             movieService.updateMovie(foundMovie);
             responseEntity = new ResponseEntity<Movie>(foundMovie, HttpStatus.OK);
@@ -141,7 +140,7 @@ public class MovieController {
      */
     @SuppressWarnings("unchecked")
     @RequestMapping(value = Constants.ENTITY + "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity deleteMovie(@PathVariable("id") long id) {
+    public ResponseEntity<?> deleteMovie(@PathVariable("id") long id) {
         logger.info("Deleting Movie with id: {}" , id);
 
         ResponseEntity responseEntity = null;
@@ -174,4 +173,5 @@ public class MovieController {
 
     //TODO RATING
 
+    public ResponseEntity<?> rate(){ return  null;}
 }
