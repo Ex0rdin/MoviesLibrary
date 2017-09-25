@@ -2,6 +2,7 @@ package ua.exordin.movies.service;
 
 import org.springframework.stereotype.Service;
 import ua.exordin.movies.model.Movie;
+import ua.exordin.movies.model.Rate;
 
 import java.util.List;
 
@@ -41,5 +42,15 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public boolean isMovieExist(Movie movie) {
         return false;
+    }
+
+    @Override
+    public void rateMovie(Rate rate) {
+
+    }
+
+    @Override
+    public float getMovieRating(long id) {
+        return 0;
     }
 }

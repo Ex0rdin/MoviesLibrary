@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import ua.exordin.movies.model.Movie;
+import ua.exordin.movies.model.Rate;
 import ua.exordin.movies.service.MovieService;
 import ua.exordin.movies.util.Constants;
 
@@ -37,16 +38,15 @@ public class MovieController {
 
         ResponseEntity responseEntity = null;
 
-        //TODO Make Unique constraint in db ?
         if (movieService.isMovieExist(movie)) {
-            logger.error("Movie record {} already exists", movie.getName());
+            logger.error("Movie with id: {} already exists", movie.getId());
 
-            responseEntity = new ResponseEntity(String.format("Movie record %s already exists", movie.getName()), HttpStatus.CONFLICT);
+            responseEntity = new ResponseEntity(String.format("Movie with id: %d already exists", movie.getId()), HttpStatus.CONFLICT);
         } else {
             movieService.saveMovie(movie);
 
             HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.setLocation(compBuilder.path(Constants.CONTROLLER_MAPPING_ROOT + Constants.ENTITY + "/{name}")
+            httpHeaders.setLocation(compBuilder.path(Constants.CONTROLLER_MAPPING_ROOT + Constants.ENTITY + "/{id}")
                     .buildAndExpand(movie.getName()).toUri());
             responseEntity = new ResponseEntity<String>(httpHeaders, HttpStatus.CREATED);
         }
@@ -94,7 +94,7 @@ public class MovieController {
             logger.warn("No movies found");
             responseEntity = new ResponseEntity(HttpStatus.NOT_FOUND);
         } else {
-            responseEntity = new ResponseEntity<List<Movie>>(movies, HttpStatus.OK);
+            responseEntity = new ResponseEntity<>(movies, HttpStatus.OK);
         }
 
         return responseEntity;
@@ -127,7 +127,7 @@ public class MovieController {
             foundMovie.setBudgetInDollars(movie.getBudgetInDollars());
 
             movieService.updateMovie(foundMovie);
-            responseEntity = new ResponseEntity<Movie>(foundMovie, HttpStatus.OK);
+            responseEntity = new ResponseEntity<>(foundMovie, HttpStatus.OK);
         }
 
         return responseEntity;
@@ -171,7 +171,25 @@ public class MovieController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    //TODO RATING
+    //TODO RATE MOVIE
+    @SuppressWarnings("unchecked")
+    @RequestMapping(value = Constants.ENTITY + "/{id}", method = RequestMethod.POST)
+    public ResponseEntity<?> rateMovie(@PathVariable("id") long id, @RequestBody Rate rate) {
+        logger.info("Adding rating for Movie with id: {}", id);
 
-    public ResponseEntity<?> rate(){ return  null;}
+        ResponseEntity responseEntity = null;
+
+        if (movieService.findMovie(id) == null) {
+            logger.error("Failed torate Movie with id: {}", id);
+            responseEntity = new ResponseEntity(String.format("Failed torate Movie with id: %d", id),
+                    HttpStatus.NOT_FOUND);
+        } else {
+            movieService.rateMovie(rate);
+            responseEntity = new ResponseEntity<>(HttpStatus.OK);
+        }
+
+        return responseEntity;
+    }
+
+    //TODO GET RATING
 }
