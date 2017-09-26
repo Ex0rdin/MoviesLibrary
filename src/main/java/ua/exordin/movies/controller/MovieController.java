@@ -6,23 +6,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import ua.exordin.movies.model.Movie;
 import ua.exordin.movies.model.Rate;
 import ua.exordin.movies.service.MovieService;
+import ua.exordin.movies.service.RateService;
 import ua.exordin.movies.util.Constants;
 
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @RestController
 @RequestMapping(Constants.CONTROLLER_MAPPING_ROOT)
+@Validated
 public class MovieController {
 
     public static final Logger logger = LoggerFactory.getLogger(MovieController.class);
 
     @Autowired
     MovieService movieService;
+
+    @Autowired
+    RateService rateService;
 
 
     /**
@@ -32,7 +39,7 @@ public class MovieController {
      * @return Spring response entity on successfully created or already present Movie Entity
      */
     @SuppressWarnings("unchecked")
-    @RequestMapping(value = Constants.ENTITY + "/", method = RequestMethod.POST)
+    @PostMapping(Constants.ENTITY + "/")
     public ResponseEntity<?> createMovie(@RequestBody Movie movie, UriComponentsBuilder compBuilder) {
         logger.info("Creating new Movie record : {}", movie);
 
@@ -60,7 +67,7 @@ public class MovieController {
      * @return Spring response entity on successfully fetched or absent Movie entity
      */
     @SuppressWarnings("unchecked")
-    @RequestMapping(value = Constants.ENTITY + "/{id}", method = RequestMethod.GET)
+    @GetMapping(Constants.ENTITY + "/{id}")
     public ResponseEntity<?> getMovie(@PathVariable("id") long id) {
         logger.info("Getting Movie {}", id);
 
@@ -83,7 +90,7 @@ public class MovieController {
      * GET method for collecting all existing Movies
      * @return  Spring response entity on successfully fetched or absent Movies entities
      */
-    @RequestMapping(value = Constants.ENTITY + "/", method = RequestMethod.GET)
+    @GetMapping(Constants.ENTITY + "/")
     public ResponseEntity<List<Movie>> listAllMovies() {
         logger.info("Retrieving all movies");
 
@@ -107,7 +114,7 @@ public class MovieController {
      * @return Spring response entity on successful update or absent Movie entity
      */
     @SuppressWarnings("unchecked")
-    @RequestMapping(value = Constants.ENTITY + "/{id}", method = RequestMethod.PUT)
+    @PutMapping(Constants.ENTITY + "/{id}")
     public ResponseEntity<?> updateMovie(@PathVariable("id") long id, @RequestBody Movie movie) {
         logger.info("Updating Movie with id: {}", id);
 
@@ -139,7 +146,7 @@ public class MovieController {
      * @return Spring response entity on successful delete or absent Movie entity
      */
     @SuppressWarnings("unchecked")
-    @RequestMapping(value = Constants.ENTITY + "/{id}", method = RequestMethod.DELETE)
+    @DeleteMapping(Constants.ENTITY + "/{id}")
     public ResponseEntity<?> deleteMovie(@PathVariable("id") long id) {
         logger.info("Deleting Movie with id: {}" , id);
 
@@ -163,7 +170,7 @@ public class MovieController {
      * DELETE method to delete all existing Movies
      * @return Spring response entity on successful delete of all Movies
      */
-    @RequestMapping(value = Constants.ENTITY + "/", method = RequestMethod.DELETE)
+    @DeleteMapping(Constants.ENTITY + "/")
     public ResponseEntity<Movie> deleteAllMovies() {
         logger.info("WARNING! Deleting all Movies!");
 
@@ -173,23 +180,30 @@ public class MovieController {
 
     //TODO RATE MOVIE
     @SuppressWarnings("unchecked")
-    @RequestMapping(value = Constants.ENTITY + "/{id}", method = RequestMethod.POST)
-    public ResponseEntity<?> rateMovie(@PathVariable("id") long id, @RequestBody Rate rate) {
+    @PostMapping(Constants.ENTITY + Constants.RATING + "/{id}")
+    public ResponseEntity<?> rateMovie(@PathVariable("id") long id, @Size(max = 5) @RequestParam("rate") int rate) {
         logger.info("Adding rating for Movie with id: {}", id);
 
         ResponseEntity responseEntity = null;
 
-        if (movieService.findMovie(id) == null) {
+        Movie foundMovie = movieService.findMovie(id);
+
+        if (foundMovie == null) {
             logger.error("Failed torate Movie with id: {}", id);
             responseEntity = new ResponseEntity(String.format("Failed torate Movie with id: %d", id),
                     HttpStatus.NOT_FOUND);
         } else {
-            movieService.rateMovie(rate);
+            //TODO Choose
+            // Get list of Rate entities and recalculate
+            // Get average from db. Keep in mind Spring data;
+            // Calculate using Java 8 Streams on list
+            List<Rate> ratings = rateService.getMovieRatings(id);
+
+//            rateService.rateMovie(rate);
             responseEntity = new ResponseEntity<>(HttpStatus.OK);
         }
 
         return responseEntity;
     }
 
-    //TODO GET RATING
 }

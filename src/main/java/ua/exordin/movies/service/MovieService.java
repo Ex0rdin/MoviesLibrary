@@ -1,7 +1,6 @@
 package ua.exordin.movies.service;
 
 import ua.exordin.movies.model.Movie;
-import ua.exordin.movies.model.Rate;
 
 import java.util.List;
 
@@ -20,9 +19,4 @@ public interface MovieService {
     void deleteAllMovies();
 
     boolean isMovieExist(Movie movie);
-
-    void rateMovie(Rate rate);
-
-    float getMovieRating(long id);
-
 }
