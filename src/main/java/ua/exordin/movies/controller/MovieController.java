@@ -181,7 +181,8 @@ public class MovieController {
     //TODO RATE MOVIE
     @SuppressWarnings("unchecked")
     @PostMapping(Constants.ENTITY + Constants.RATING + "/{id}")
-    public ResponseEntity<?> rateMovie(@PathVariable("id") long id, @Size(max = 5) @RequestParam("rate") int rate) {
+    public ResponseEntity<?> rateMovie(@PathVariable("id") long id, @Size(max = 5) @RequestParam("rate") int rate,
+                                       UriComponentsBuilder compBuilder) {
         logger.info("Adding rating for Movie with id: {}", id);
 
         ResponseEntity responseEntity = null;
@@ -193,13 +194,22 @@ public class MovieController {
             responseEntity = new ResponseEntity(String.format("Failed to rate Movie with id: %d", id),
                     HttpStatus.NOT_FOUND);
         } else {
-            Rate movieRate = new Rate();
-            movieRate.setSourceIp("");
-            movieRate.setBrowserFingerprint("");
-            movieRate.setMark(rate);
-            movieRate.setMovieId(id);
+            Rate currentMovieRate = new Rate();
+            currentMovieRate.setSourceIp("");
+            currentMovieRate.setBrowserFingerprint("");
+            currentMovieRate.setMark(rate);
+            currentMovieRate.setMovieId(id);
 
-            responseEntity = new ResponseEntity<>(HttpStatus.OK);
+            rateService.rateMovie(currentMovieRate);
+
+            rateService.recalculateAvgRateFor(foundMovie);
+
+            movieService.updateMovie(foundMovie);
+
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setLocation(compBuilder.path(Constants.CONTROLLER_MAPPING_ROOT + Constants.ENTITY + Constants.RATING + "/{id}")
+                    .buildAndExpand(foundMovie.getName()).toUri());
+            responseEntity = new ResponseEntity<String>(httpHeaders, HttpStatus.CREATED);
         }
 
         return responseEntity;
