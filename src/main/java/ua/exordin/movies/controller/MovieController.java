@@ -13,8 +13,10 @@ import ua.exordin.movies.model.Movie;
 import ua.exordin.movies.model.Rate;
 import ua.exordin.movies.service.MovieService;
 import ua.exordin.movies.service.RateService;
+import ua.exordin.movies.util.UsingThisTo;
 import ua.exordin.movies.util.Constants;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Size;
 import java.util.List;
 
@@ -182,7 +184,7 @@ public class MovieController {
     @SuppressWarnings("unchecked")
     @PostMapping(Constants.ENTITY + Constants.RATING + "/{id}")
     public ResponseEntity<?> rateMovie(@PathVariable("id") long id, @Size(max = 5) @RequestParam("rate") int rate,
-                                       UriComponentsBuilder compBuilder) {
+                                       HttpServletRequest request, UriComponentsBuilder compBuilder) {
         logger.info("Adding rating for Movie with id: {}", id);
 
         ResponseEntity responseEntity = null;
@@ -195,8 +197,8 @@ public class MovieController {
                     HttpStatus.NOT_FOUND);
         } else {
             Rate currentMovieRate = new Rate();
-            currentMovieRate.setSourceIp("");
-            currentMovieRate.setBrowserFingerprint("");
+            currentMovieRate.setSourceIp(UsingThisTo.extractIpFromRequest(request));
+            currentMovieRate.setBrowserFingerprint(UsingThisTo.extractUserAgentFromRequest(request));
             currentMovieRate.setMark(rate);
             currentMovieRate.setMovieId(id);
 
