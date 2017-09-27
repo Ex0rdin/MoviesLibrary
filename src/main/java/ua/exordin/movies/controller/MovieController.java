@@ -190,16 +190,15 @@ public class MovieController {
 
         if (foundMovie == null) {
             logger.error("Failed torate Movie with id: {}", id);
-            responseEntity = new ResponseEntity(String.format("Failed torate Movie with id: %d", id),
+            responseEntity = new ResponseEntity(String.format("Failed to rate Movie with id: %d", id),
                     HttpStatus.NOT_FOUND);
         } else {
-            //TODO Choose
-            // Get list of Rate entities and recalculate
-            // Get average from db. Keep in mind Spring data;
-            // Calculate using Java 8 Streams on list
-            List<Rate> ratings = rateService.getMovieRatings(id);
+            Rate movieRate = new Rate();
+            movieRate.setSourceIp("");
+            movieRate.setBrowserFingerprint("");
+            movieRate.setMark(rate);
+            movieRate.setMovieId(id);
 
-//            rateService.rateMovie(rate);
             responseEntity = new ResponseEntity<>(HttpStatus.OK);
         }
 

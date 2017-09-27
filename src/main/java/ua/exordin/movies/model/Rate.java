@@ -4,14 +4,14 @@ public class Rate {
 
     private long id;
     private String sourceIp;
-    private String browserFootprint;
+    private String browserFingerprint;
     private int mark;
-    private int movieId;
+    private long movieId;
 
-    public Rate(long id, String sourceIp, String browserFootprint, int mark, int movieId) {
+    public Rate(long id, String sourceIp, String browserFingerprint, int mark, long movieId) {
         this.id = id;
         this.sourceIp = sourceIp;
-        this.browserFootprint = browserFootprint;
+        this.browserFingerprint = browserFingerprint;
         this.mark = mark;
         this.movieId = movieId;
     }
@@ -36,12 +36,12 @@ public class Rate {
         this.sourceIp = sourceIp;
     }
 
-    public String getBrowserFootprint() {
-        return browserFootprint;
+    public String getBrowserFingerprint() {
+        return browserFingerprint;
     }
 
-    public void setBrowserFootprint(String browserFootprint) {
-        this.browserFootprint = browserFootprint;
+    public void setBrowserFingerprint(String browserFingerprint) {
+        this.browserFingerprint = browserFingerprint;
     }
 
     public int getMark() {
@@ -52,11 +52,11 @@ public class Rate {
         this.mark = mark;
     }
 
-    public int getMovieId() {
+    public long getMovieId() {
         return movieId;
     }
 
-    public void setMovieId(int movieId) {
+    public void setMovieId(long movieId) {
         this.movieId = movieId;
     }
 
@@ -71,16 +71,16 @@ public class Rate {
         if (mark != rate.mark) return false;
         if (movieId != rate.movieId) return false;
         if (sourceIp != null ? !sourceIp.equals(rate.sourceIp) : rate.sourceIp != null) return false;
-        return browserFootprint != null ? browserFootprint.equals(rate.browserFootprint) : rate.browserFootprint == null;
+        return browserFingerprint != null ? browserFingerprint.equals(rate.browserFingerprint) : rate.browserFingerprint == null;
     }
 
     @Override
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
         result = 31 * result + (sourceIp != null ? sourceIp.hashCode() : 0);
-        result = 31 * result + (browserFootprint != null ? browserFootprint.hashCode() : 0);
+        result = 31 * result + (browserFingerprint != null ? browserFingerprint.hashCode() : 0);
         result = 31 * result + mark;
-        result = 31 * result + movieId;
+        result = 31 * result + (int) (movieId ^ (movieId >>> 32));
         return result;
     }
 
@@ -89,7 +89,7 @@ public class Rate {
         return "Rate{" +
                 "id=" + id +
                 ", sourceIp='" + sourceIp + '\'' +
-                ", browserFootprint='" + browserFootprint + '\'' +
+                ", browserFingerprint='" + browserFingerprint + '\'' +
                 ", mark=" + mark +
                 ", movieId=" + movieId +
                 '}';
