@@ -1,9 +1,14 @@
 package ua.exordin.movies.model;
 
+import javax.persistence.*;
 import java.sql.Date;
 
+@Entity
+@Table(name = "Movies")
 public class Movie {
 
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
     private long id;
     private String name;
     private String description;
@@ -22,9 +27,7 @@ public class Movie {
         this.rating = rating;
     }
 
-    public Movie() {
-        id = 0;
-    }
+    public Movie() {}
 
     public long getId() {
         return id;

@@ -1,10 +1,12 @@
 package ua.exordin.movies.service;
 
+import org.springframework.stereotype.Service;
 import ua.exordin.movies.model.Movie;
 import ua.exordin.movies.model.Rate;
 
 import java.util.List;
 
+@Service
 public class RateServiceImpl implements RateService{
 
     @Override

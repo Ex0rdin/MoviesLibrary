@@ -37,12 +37,12 @@ public class MovieController {
     /**
      * POST Method for creating Movie entities
      * @param movie Movie record
-     * @param compBuilder Spring components builder
+     * @param compBuilder Spring URI builder
      * @return Spring response entity on successfully created or already present Movie Entity
      */
-    @SuppressWarnings("unchecked")
+//    @SuppressWarnings("unchecked")
     @PostMapping(Constants.ENTITY + "/")
-    public ResponseEntity<?> createMovie(@RequestBody Movie movie, UriComponentsBuilder compBuilder) {
+    public ResponseEntity<Movie> createMovie(@RequestBody Movie movie, UriComponentsBuilder compBuilder) {
         logger.info("Creating new Movie record : {}", movie);
 
         ResponseEntity responseEntity = null;
@@ -180,7 +180,14 @@ public class MovieController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    //TODO RATE MOVIE
+    /**
+     * POST Method for adding Movie rates
+     * @param id Movie id
+     * @param rate Movie rate mark
+     * @param request HttpServletRequest
+     * @param compBuilder Spring URI builder
+     * @return Spring response entity on successful adding of Movie mark
+     */
     @SuppressWarnings("unchecked")
     @PostMapping(Constants.ENTITY + Constants.RATING + "/{id}")
     public ResponseEntity<?> rateMovie(@PathVariable("id") long id, @Size(max = 5) @RequestParam("rate") int rate,

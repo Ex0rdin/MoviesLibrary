@@ -1,7 +1,13 @@
 package ua.exordin.movies.model;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "Ratings")
 public class Rate {
 
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
     private long id;
     private String sourceIp;
     private String browserFingerprint;
@@ -16,9 +22,7 @@ public class Rate {
         this.movieId = movieId;
     }
 
-    public Rate() {
-        id = 0;
-    }
+    public Rate() {}
 
     public long getId() {
         return id;

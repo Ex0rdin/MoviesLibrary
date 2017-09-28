@@ -1,9 +1,14 @@
 package ua.exordin.movies.model;
 
+import javax.persistence.*;
 import java.sql.Date;
 
+@Entity
+@Table(name = "RequestsLog")
 public class Request {
 
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
     private long id;
     private String sourceIp;
     private Date requestDate;
