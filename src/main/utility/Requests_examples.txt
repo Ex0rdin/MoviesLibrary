@@ -48,4 +48,6 @@ URL: DELETE localhost:8080/movies/movie/
 
 ===
 
+RATE MOVIE:
+URL: POST localhost:8080/movies/movie/rate/5?rate=4
 

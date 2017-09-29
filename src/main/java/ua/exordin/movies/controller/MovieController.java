@@ -6,15 +6,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 import ua.exordin.movies.model.Movie;
 import ua.exordin.movies.model.Rate;
 import ua.exordin.movies.service.MovieService;
 import ua.exordin.movies.service.RateService;
+import ua.exordin.movies.service.RequestsLogService;
 import ua.exordin.movies.util.UsingThisTo;
 import ua.exordin.movies.util.Constants;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -29,23 +31,29 @@ public class MovieController {
     @Autowired
     RateService rateService;
 
+    @Autowired
+    RequestsLogService requestsLogService;
+
 
     /**
      * POST Method for creating Movie entities
      * @param movie Movie record
-     * @param compBuilder Spring URI builder
      * @return Spring response entity on successfully created or already present Movie Entity
      */
     @PostMapping(Constants.ENTITY + "/")
-    public ResponseEntity<Movie> createMovie(@RequestBody Movie movie, UriComponentsBuilder compBuilder) {
+    public ResponseEntity<Movie> createMovie(@RequestBody Movie movie, HttpServletRequest httpServletRequest/*UriComponentsBuilder compBuilder*/) {
         logger.info("Creating new Movie record : {}", movie);
-
-            Movie savedMovie = movieService.saveMovie(movie);
+        Date dateNow = getNow();
+        requestsLogService.logReceived(httpServletRequest, dateNow);
+        Movie savedMovie = movieService.saveMovie(movie);
 //
 //            HttpHeaders httpHeaders = new HttpHeaders();
 //            httpHeaders.setLocation(compBuilder.path(Constants.CONTROLLER_MAPPING_ROOT + Constants.ENTITY + savedMovie.getId())
 //                    .buildAndExpand(movie.getName()).toUri());
-            return new ResponseEntity<>(savedMovie, HttpStatus.CREATED);
+
+        requestsLogService.logSuccess(httpServletRequest, dateNow);
+
+        return new ResponseEntity<>(savedMovie, HttpStatus.CREATED);
     }
 
     /**
@@ -55,8 +63,10 @@ public class MovieController {
      */
     @SuppressWarnings("unchecked")
     @GetMapping(Constants.ENTITY + "/{id}")
-    public ResponseEntity<?> getMovie(@PathVariable("id") long id) {
+    public ResponseEntity<?> getMovie(@PathVariable("id") long id, HttpServletRequest httpServletRequest) {
         logger.info("Getting Movie {}", id);
+        Date dateNow = getNow();
+        requestsLogService.logReceived(httpServletRequest, dateNow);
 
         ResponseEntity responseEntity = null;
 
@@ -65,8 +75,10 @@ public class MovieController {
         if (movie == null) {
             logger.error("Movie with id: {}, not found", id);
             responseEntity = new ResponseEntity(String.format("Movie with id: %d, not found", id), HttpStatus.NOT_FOUND);
+            requestsLogService.logFailure(httpServletRequest, dateNow);
         } else {
             responseEntity = new ResponseEntity<>(movie, HttpStatus.OK);
+            requestsLogService.logSuccess(httpServletRequest, dateNow);
         }
 
         return responseEntity;
@@ -77,8 +89,10 @@ public class MovieController {
      * @return  Spring response entity on successfully fetched or absent Movies entities
      */
     @GetMapping(Constants.ENTITY + "/")
-    public ResponseEntity<List<Movie>> listAllMovies() {
+    public ResponseEntity<List<Movie>> listAllMovies(HttpServletRequest httpServletRequest) {
         logger.info("Retrieving all movies");
+        Date dateNow = getNow();
+        requestsLogService.logReceived(httpServletRequest, dateNow);
 
         ResponseEntity responseEntity = null;
 
@@ -86,8 +100,10 @@ public class MovieController {
         if (movies.isEmpty()) {
             logger.warn("No movies found");
             responseEntity = new ResponseEntity(HttpStatus.NOT_FOUND);
+            requestsLogService.logFailure(httpServletRequest, dateNow);
         } else {
             responseEntity = new ResponseEntity<>(movies, HttpStatus.OK);
+            requestsLogService.logSuccess(httpServletRequest, dateNow);
         }
 
         return responseEntity;
@@ -100,9 +116,11 @@ public class MovieController {
      */
     @SuppressWarnings("unchecked")
     @PutMapping(Constants.ENTITY + "/")
-    public ResponseEntity<?> updateMovie(@RequestBody Movie movie) {
+    public ResponseEntity<?> updateMovie(@RequestBody Movie movie, HttpServletRequest httpServletRequest) {
         long movieId = movie.getId();
         logger.info("Updating Movie with id: {}", movieId);
+        Date dateNow = getNow();
+        requestsLogService.logReceived(httpServletRequest, dateNow);
 
         ResponseEntity responseEntity = null;
 
@@ -112,6 +130,7 @@ public class MovieController {
             logger.error("Failed to update Movie with id: {}. It was not found.", movieId);
             responseEntity = new ResponseEntity(String.format("Failed to update Movie with id: %s. It was not found.", movieId),
                     HttpStatus.NOT_FOUND);
+            requestsLogService.logFailure(httpServletRequest, dateNow);
         } else {
             foundMovie.setName(movie.getName());
             foundMovie.setDescription(movie.getDescription());
@@ -121,6 +140,7 @@ public class MovieController {
 
             movieService.updateMovie(foundMovie);
             responseEntity = new ResponseEntity<>(foundMovie, HttpStatus.OK);
+            requestsLogService.logSuccess(httpServletRequest, dateNow);
         }
 
         return responseEntity;
@@ -133,8 +153,10 @@ public class MovieController {
      */
     @SuppressWarnings("unchecked")
     @DeleteMapping(Constants.ENTITY + "/{id}")
-    public ResponseEntity<?> deleteMovie(@PathVariable("id") long id) {
+    public ResponseEntity<?> deleteMovie(@PathVariable("id") long id, HttpServletRequest httpServletRequest) {
         logger.info("Deleting Movie with id: {}" , id);
+        Date dateNow = getNow();
+        requestsLogService.logReceived(httpServletRequest, dateNow);
 
         ResponseEntity responseEntity = null;
 
@@ -143,9 +165,11 @@ public class MovieController {
             logger.error("Have not deleted movie with id {}. It does not exist.", id);
             responseEntity = new ResponseEntity(String.format("Have not deleted movie with id %s. It does not exist.", id),
                     HttpStatus.NOT_FOUND);
+            requestsLogService.logFailure(httpServletRequest, dateNow);
         } else {
             movieService.deleteMovie(id);
             responseEntity = new ResponseEntity<>(movie, HttpStatus.NO_CONTENT);
+            requestsLogService.logSuccess(httpServletRequest, dateNow);
         }
 
         return responseEntity;
@@ -157,10 +181,13 @@ public class MovieController {
      * @return Spring response entity on successful delete of all Movies
      */
     @DeleteMapping(Constants.ENTITY + "/")
-    public ResponseEntity<?> deleteAllMovies() {
+    public ResponseEntity<?> deleteAllMovies(HttpServletRequest httpServletRequest) {
         logger.info("WARNING! Deleting all Movies!");
+        Date dateNow = getNow();
+        requestsLogService.logReceived(httpServletRequest, dateNow);
 
         movieService.deleteAllMovies();
+        requestsLogService.logSuccess(httpServletRequest, dateNow);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -168,14 +195,16 @@ public class MovieController {
      * POST Method for adding Movie rates
      * @param id Movie id
      * @param rate Movie rate mark
-     * @param request HttpServletRequest
+     * @param httpServletRequest HttpServletRequest
      * @return Spring response entity on successful adding of Movie mark
      */
     @PostMapping(Constants.ENTITY + Constants.RATING + "/{id}")
     public ResponseEntity<?> rateMovie(@PathVariable("id") long id, @RequestParam("rate") int rate,
-                                       HttpServletRequest request) {
+                                       HttpServletRequest httpServletRequest) {
         logger.info("Adding rating for Movie with id: {}", id);
-
+        Date dateNow = getNow();
+        requestsLogService.logReceived(httpServletRequest, dateNow);
+        
         ResponseEntity responseEntity = null;
 
         Movie foundMovie = movieService.findMovie(id);
@@ -186,8 +215,8 @@ public class MovieController {
                     HttpStatus.NOT_FOUND);
         } else {
             Rate currentMovieRate = new Rate();
-            currentMovieRate.setIp(UsingThisTo.extractIpFromRequest(request));
-            currentMovieRate.setBrowserFingerprint(UsingThisTo.extractUserAgentFromRequest(request));
+            currentMovieRate.setIp(UsingThisTo.extractIpFromRequest(httpServletRequest));
+            currentMovieRate.setBrowserFingerprint(UsingThisTo.extractUserAgentFromRequest(httpServletRequest));
             currentMovieRate.setMark(rate);
             currentMovieRate.setMovieId(id);
 
@@ -197,6 +226,10 @@ public class MovieController {
         }
 
         return responseEntity;
+    }
+
+    private Date getNow() {
+        return Date.valueOf(LocalDate.now());
     }
 
 }

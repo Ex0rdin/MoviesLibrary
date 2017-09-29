@@ -10,7 +10,7 @@ public class Request {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String sourceIp;
+    private String ip;
     private Date requestDate;
     private String requestType;
     private String result;
@@ -18,7 +18,7 @@ public class Request {
 
     public Request(long id, String sourceIp, Date requestDate, String requestType, String result, String additionalInfo) {
         this.id = id;
-        this.sourceIp = sourceIp;
+        this.ip = sourceIp;
         this.requestDate = requestDate;
         this.requestType = requestType;
         this.result = result;
@@ -37,12 +37,12 @@ public class Request {
         this.id = id;
     }
 
-    public String getSourceIp() {
-        return sourceIp;
+    public String getIp() {
+        return ip;
     }
 
-    public void setSourceIp(String sourceIp) {
-        this.sourceIp = sourceIp;
+    public void setIp(String ip) {
+        this.ip = ip;
     }
 
     public Date getRequestDate() {
@@ -85,7 +85,7 @@ public class Request {
         Request request = (Request) o;
 
         if (id != request.id) return false;
-        if (sourceIp != null ? !sourceIp.equals(request.sourceIp) : request.sourceIp != null) return false;
+        if (ip != null ? !ip.equals(request.ip) : request.ip != null) return false;
         if (requestDate != null ? !requestDate.equals(request.requestDate) : request.requestDate != null) return false;
         if (requestType != null ? !requestType.equals(request.requestType) : request.requestType != null) return false;
         if (result != null ? !result.equals(request.result) : request.result != null) return false;
@@ -95,7 +95,7 @@ public class Request {
     @Override
     public int hashCode() {
         int result1 = (int) (id ^ (id >>> 32));
-        result1 = 31 * result1 + (sourceIp != null ? sourceIp.hashCode() : 0);
+        result1 = 31 * result1 + (ip != null ? ip.hashCode() : 0);
         result1 = 31 * result1 + (requestDate != null ? requestDate.hashCode() : 0);
         result1 = 31 * result1 + (requestType != null ? requestType.hashCode() : 0);
         result1 = 31 * result1 + (result != null ? result.hashCode() : 0);
@@ -107,7 +107,7 @@ public class Request {
     public String toString() {
         return "Request{" +
                 "id=" + id +
-                ", sourceIp='" + sourceIp + '\'' +
+                ", ip='" + ip + '\'' +
                 ", requestDate=" + requestDate +
                 ", requestType='" + requestType + '\'' +
                 ", result='" + result + '\'' +

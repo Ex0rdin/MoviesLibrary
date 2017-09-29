@@ -21,7 +21,7 @@ CREATE TABLE public."requests_log"
    "id" bigserial NOT NULL,
    "ip" character varying(16),
    "date" date,
-   "request _type" character varying(16),
+   "request_type" character varying(16),
    "result" character varying(16),
    "additional_info" text,
    CONSTRAINT "request_log.id_pk" PRIMARY KEY ("id")
