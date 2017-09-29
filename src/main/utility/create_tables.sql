@@ -1,14 +1,14 @@
 -- Creating Table Movies
-CREATE TABLE public."Movies"
+CREATE TABLE public."movies"
 (
-   "ID" bigserial NOT NULL,
-   "Name" character varying(64),
-   "Description" text,
-   "PremierDate" date,
-   "DurationInMinutes" integer,
-   "BudgetInDollars" integer,
-   "Rating" numeric(3,2),
-   CONSTRAINT "Movies.ID_PK" PRIMARY KEY ("ID")
+   "id" bigserial NOT NULL,
+   "name" character varying(64),
+   "description" text,
+   "premier_date" date,
+   "duration_in_minutes" integer,
+   "budget_in_dollars" integer,
+   "rating" numeric(3,2),
+   CONSTRAINT "movies.id_pk" PRIMARY KEY ("id")
 )
 WITH (
   OIDS = FALSE
@@ -16,15 +16,15 @@ WITH (
 ;
 
 -- Creating Table RequestsLog
-CREATE TABLE public."RequestsLog"
+CREATE TABLE public."requests_log"
 (
-   "ID" bigserial NOT NULL,
-   "IP" character varying(16),
-   "Date" date,
-   "RequestType" character varying(16),
-   "Result" character varying(16),
-   "AdditionalInfo" text,
-   CONSTRAINT "RequestLog.ID_PK" PRIMARY KEY ("ID")
+   "id" bigserial NOT NULL,
+   "ip" character varying(16),
+   "date" date,
+   "request _type" character varying(16),
+   "result" character varying(16),
+   "additional_info" text,
+   CONSTRAINT "request_log.id_pk" PRIMARY KEY ("id")
 )
 WITH (
   OIDS = FALSE
@@ -33,20 +33,20 @@ WITH (
 
 
 -- Creating table Ratings
-CREATE TABLE public."Ratings"
+CREATE TABLE public."ratings"
 (
-   "ID" bigserial NOT NULL,
-   "IP" character varying(16),
-   "BrowserFingerprint" text,
-   "Mark" smallint,
-   "MovieId" bigint,
-   CONSTRAINT "IP_UNIQUE" UNIQUE ("IP"),
-   CONSTRAINT "BrowserFingerprint_UNIQUE" UNIQUE ("BrowserFingerprint"),
-   CONSTRAINT "MovieId_FK" FOREIGN KEY ("MovieId") REFERENCES public."Movies" ("ID") ON UPDATE CASCADE ON DELETE SET NULL,
-   CONSTRAINT "Ratings.ID_PK" PRIMARY KEY ("ID")
+   "id" bigserial NOT NULL,
+   "ip" character varying(16),
+   "browser_fingerprint" text,
+   "mark" smallint,
+   "movie_id" bigint,
+   CONSTRAINT "ip_unique" UNIQUE ("ip"),
+   CONSTRAINT "browser_fingerprint_unique" UNIQUE ("browser_fingerprint"),
+   CONSTRAINT "movie_id_fk" FOREIGN KEY ("movie_id") REFERENCES public."movies" ("id") ON UPDATE CASCADE ON DELETE SET NULL,
+   CONSTRAINT "ratings.id_pk" PRIMARY KEY ("id")
 )
 WITH (
   OIDS = FALSE
 )
 ;
-COMMENT ON COLUMN public."Ratings"."Mark" IS '1-5';
+COMMENT ON COLUMN public."ratings"."mark" IS '1-5';

@@ -7,9 +7,6 @@ import java.util.List;
 
 public interface RateService {
 
-    void rateMovie(Rate rate);
+    void rateMovie(Rate rate, Movie movie);
 
-    List<Rate> getMovieRatings(long id);
-
-    void recalculateAvgRateFor(Movie movie);
 }

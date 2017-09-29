@@ -3,10 +3,8 @@ package ua.exordin.movies.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import ua.exordin.movies.model.Movie;
@@ -17,12 +15,10 @@ import ua.exordin.movies.util.UsingThisTo;
 import ua.exordin.movies.util.Constants;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.constraints.Size;
 import java.util.List;
 
 @RestController
 @RequestMapping(Constants.CONTROLLER_MAPPING_ROOT)
-@Validated
 public class MovieController {
 
     public static final Logger logger = LoggerFactory.getLogger(MovieController.class);
@@ -40,27 +36,16 @@ public class MovieController {
      * @param compBuilder Spring URI builder
      * @return Spring response entity on successfully created or already present Movie Entity
      */
-//    @SuppressWarnings("unchecked")
     @PostMapping(Constants.ENTITY + "/")
     public ResponseEntity<Movie> createMovie(@RequestBody Movie movie, UriComponentsBuilder compBuilder) {
         logger.info("Creating new Movie record : {}", movie);
 
-        ResponseEntity responseEntity = null;
-
-        if (movieService.isMovieExist(movie)) {
-            logger.error("Movie with id: {} already exists", movie.getId());
-
-            responseEntity = new ResponseEntity(String.format("Movie with id: %d already exists", movie.getId()), HttpStatus.CONFLICT);
-        } else {
-            movieService.saveMovie(movie);
-
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.setLocation(compBuilder.path(Constants.CONTROLLER_MAPPING_ROOT + Constants.ENTITY + "/{id}")
-                    .buildAndExpand(movie.getName()).toUri());
-            responseEntity = new ResponseEntity<String>(httpHeaders, HttpStatus.CREATED);
-        }
-
-        return responseEntity;
+            Movie savedMovie = movieService.saveMovie(movie);
+//
+//            HttpHeaders httpHeaders = new HttpHeaders();
+//            httpHeaders.setLocation(compBuilder.path(Constants.CONTROLLER_MAPPING_ROOT + Constants.ENTITY + savedMovie.getId())
+//                    .buildAndExpand(movie.getName()).toUri());
+            return new ResponseEntity<>(savedMovie, HttpStatus.CREATED);
     }
 
     /**
@@ -77,7 +62,6 @@ public class MovieController {
 
         Movie movie = movieService.findMovie(id);
 
-        //TODO Use Optional?
         if (movie == null) {
             logger.error("Movie with id: {}, not found", id);
             responseEntity = new ResponseEntity(String.format("Movie with id: %d, not found", id), HttpStatus.NOT_FOUND);
@@ -111,22 +95,22 @@ public class MovieController {
 
     /**
      * PUT method for updating Movie
-     * @param id Movie id
      * @param movie Movie entity
      * @return Spring response entity on successful update or absent Movie entity
      */
     @SuppressWarnings("unchecked")
-    @PutMapping(Constants.ENTITY + "/{id}")
-    public ResponseEntity<?> updateMovie(@PathVariable("id") long id, @RequestBody Movie movie) {
-        logger.info("Updating Movie with id: {}", id);
+    @PutMapping(Constants.ENTITY + "/")
+    public ResponseEntity<?> updateMovie(@RequestBody Movie movie) {
+        long movieId = movie.getId();
+        logger.info("Updating Movie with id: {}", movieId);
 
         ResponseEntity responseEntity = null;
 
-        Movie foundMovie = movieService.findMovie(id);
+        Movie foundMovie = movieService.findMovie(movieId);
 
         if (foundMovie == null) {
-            logger.error("Failed to update Movie with id: {}. It was not found.", id);
-            responseEntity = new ResponseEntity(String.format("Failed to update Movie with id: %s. It was not found.", id),
+            logger.error("Failed to update Movie with id: {}. It was not found.", movieId);
+            responseEntity = new ResponseEntity(String.format("Failed to update Movie with id: %s. It was not found.", movieId),
                     HttpStatus.NOT_FOUND);
         } else {
             foundMovie.setName(movie.getName());
@@ -161,7 +145,7 @@ public class MovieController {
                     HttpStatus.NOT_FOUND);
         } else {
             movieService.deleteMovie(id);
-            responseEntity = new ResponseEntity<Movie>(HttpStatus.NO_CONTENT);
+            responseEntity = new ResponseEntity<>(movie, HttpStatus.NO_CONTENT);
         }
 
         return responseEntity;
@@ -173,7 +157,7 @@ public class MovieController {
      * @return Spring response entity on successful delete of all Movies
      */
     @DeleteMapping(Constants.ENTITY + "/")
-    public ResponseEntity<Movie> deleteAllMovies() {
+    public ResponseEntity<?> deleteAllMovies() {
         logger.info("WARNING! Deleting all Movies!");
 
         movieService.deleteAllMovies();
@@ -185,13 +169,11 @@ public class MovieController {
      * @param id Movie id
      * @param rate Movie rate mark
      * @param request HttpServletRequest
-     * @param compBuilder Spring URI builder
      * @return Spring response entity on successful adding of Movie mark
      */
-    @SuppressWarnings("unchecked")
     @PostMapping(Constants.ENTITY + Constants.RATING + "/{id}")
-    public ResponseEntity<?> rateMovie(@PathVariable("id") long id, @Size(max = 5) @RequestParam("rate") int rate,
-                                       HttpServletRequest request, UriComponentsBuilder compBuilder) {
+    public ResponseEntity<?> rateMovie(@PathVariable("id") long id, @RequestParam("rate") int rate,
+                                       HttpServletRequest request) {
         logger.info("Adding rating for Movie with id: {}", id);
 
         ResponseEntity responseEntity = null;
@@ -199,26 +181,19 @@ public class MovieController {
         Movie foundMovie = movieService.findMovie(id);
 
         if (foundMovie == null) {
-            logger.error("Failed torate Movie with id: {}", id);
+            logger.error("Failed to rate Movie with id: {}", id);
             responseEntity = new ResponseEntity(String.format("Failed to rate Movie with id: %d", id),
                     HttpStatus.NOT_FOUND);
         } else {
             Rate currentMovieRate = new Rate();
-            currentMovieRate.setSourceIp(UsingThisTo.extractIpFromRequest(request));
+            currentMovieRate.setIp(UsingThisTo.extractIpFromRequest(request));
             currentMovieRate.setBrowserFingerprint(UsingThisTo.extractUserAgentFromRequest(request));
             currentMovieRate.setMark(rate);
             currentMovieRate.setMovieId(id);
 
-            rateService.rateMovie(currentMovieRate);
+            rateService.rateMovie(currentMovieRate, foundMovie);
 
-            rateService.recalculateAvgRateFor(foundMovie);
-
-            movieService.updateMovie(foundMovie);
-
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.setLocation(compBuilder.path(Constants.CONTROLLER_MAPPING_ROOT + Constants.ENTITY + Constants.RATING + "/{id}")
-                    .buildAndExpand(foundMovie.getName()).toUri());
-            responseEntity = new ResponseEntity<String>(httpHeaders, HttpStatus.CREATED);
+            responseEntity = new ResponseEntity<>(foundMovie, HttpStatus.CREATED);
         }
 
         return responseEntity;

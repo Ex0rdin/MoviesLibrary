@@ -1,4 +1,8 @@
 package ua.exordin.movies.repository;
 
-public interface MovieRepository {
+import org.springframework.data.repository.CrudRepository;
+import ua.exordin.movies.model.Movie;
+
+public interface MovieRepository extends CrudRepository<Movie, Long> {
+
 }

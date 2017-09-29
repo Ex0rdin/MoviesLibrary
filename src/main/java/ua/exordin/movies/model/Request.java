@@ -4,11 +4,11 @@ import javax.persistence.*;
 import java.sql.Date;
 
 @Entity
-@Table(name = "RequestsLog")
+@Table(name = "requests_log")
 public class Request {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String sourceIp;
     private Date requestDate;

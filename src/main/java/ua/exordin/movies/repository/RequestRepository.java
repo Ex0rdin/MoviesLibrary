@@ -1,4 +1,7 @@
 package ua.exordin.movies.repository;
 
-public interface RequestRepository {
+import org.springframework.data.repository.CrudRepository;
+import ua.exordin.movies.model.Request;
+
+public interface RequestRepository extends CrudRepository<Request, Long> {
 }

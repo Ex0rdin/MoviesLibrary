@@ -4,11 +4,11 @@ import javax.persistence.*;
 import java.sql.Date;
 
 @Entity
-@Table(name = "Movies")
+@Table(name = "movies")
 public class Movie {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
     private String description;

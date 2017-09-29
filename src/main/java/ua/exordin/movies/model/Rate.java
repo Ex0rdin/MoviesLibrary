@@ -3,20 +3,20 @@ package ua.exordin.movies.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "Ratings")
+@Table(name = "ratings")
 public class Rate {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String sourceIp;
+    private String ip;
     private String browserFingerprint;
     private int mark;
     private long movieId;
 
     public Rate(long id, String sourceIp, String browserFingerprint, int mark, long movieId) {
         this.id = id;
-        this.sourceIp = sourceIp;
+        this.ip = sourceIp;
         this.browserFingerprint = browserFingerprint;
         this.mark = mark;
         this.movieId = movieId;
@@ -32,12 +32,12 @@ public class Rate {
         this.id = id;
     }
 
-    public String getSourceIp() {
-        return sourceIp;
+    public String getIp() {
+        return ip;
     }
 
-    public void setSourceIp(String sourceIp) {
-        this.sourceIp = sourceIp;
+    public void setIp(String ip) {
+        this.ip = ip;
     }
 
     public String getBrowserFingerprint() {
@@ -74,14 +74,14 @@ public class Rate {
         if (id != rate.id) return false;
         if (mark != rate.mark) return false;
         if (movieId != rate.movieId) return false;
-        if (sourceIp != null ? !sourceIp.equals(rate.sourceIp) : rate.sourceIp != null) return false;
+        if (ip != null ? !ip.equals(rate.ip) : rate.ip != null) return false;
         return browserFingerprint != null ? browserFingerprint.equals(rate.browserFingerprint) : rate.browserFingerprint == null;
     }
 
     @Override
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (sourceIp != null ? sourceIp.hashCode() : 0);
+        result = 31 * result + (ip != null ? ip.hashCode() : 0);
         result = 31 * result + (browserFingerprint != null ? browserFingerprint.hashCode() : 0);
         result = 31 * result + mark;
         result = 31 * result + (int) (movieId ^ (movieId >>> 32));
@@ -92,7 +92,7 @@ public class Rate {
     public String toString() {
         return "Rate{" +
                 "id=" + id +
-                ", sourceIp='" + sourceIp + '\'' +
+                ", ip='" + ip + '\'' +
                 ", browserFingerprint='" + browserFingerprint + '\'' +
                 ", mark=" + mark +
                 ", movieId=" + movieId +

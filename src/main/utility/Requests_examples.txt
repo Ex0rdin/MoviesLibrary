@@ -1,0 +1,51 @@
+CREATE:
+URL: POST localhost:8080/movies/movie/
+JSON:
+{
+	"id": "0",
+	"name": "YoooHooo",
+	"description": "UUUUU",
+	"premierDate": "2017-02-01",
+	"durationInMinutes": "5",
+	"budgetInDollars": "1000",
+	"rating": "2.0"
+}
+
+===
+
+GET:
+URL: GET localhost:8080/movies/movie/<id>
+
+===
+
+GET ALL:
+URL: GET localhost:8080/movies/movie/
+
+===
+
+UPADTE:
+URL: PUT localhost:8080/movies/movie/
+JSON:
+{
+	"id": "0",
+	"name": "YoooHooo",
+	"description": "UUUUU",
+	"premierDate": "2017-02-01",
+	"durationInMinutes": "5",
+	"budgetInDollars": "1000",
+	"rating": "2.0"
+}
+
+===
+
+DELETE:
+URL: DELETE localhost:8080/movies/movie/<id>
+
+===
+
+DELETE ALL:
+URL: DELETE localhost:8080/movies/movie/
+
+===
+
+

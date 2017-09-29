@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface MovieService {
 
-    void saveMovie(Movie movie);
+    Movie saveMovie(Movie movie);
 
-    void updateMovie(Movie movie);
+    Movie updateMovie(Movie movie);
 
     void deleteMovie(long id);
 
