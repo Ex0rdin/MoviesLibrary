@@ -11,15 +11,15 @@ public class Request {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String ip;
-    private Date requestDate;
+    private Date date;
     private String requestType;
     private String result;
     private String additionalInfo;
 
-    public Request(long id, String sourceIp, Date requestDate, String requestType, String result, String additionalInfo) {
+    public Request(long id, String ip, Date date, String requestType, String result, String additionalInfo) {
         this.id = id;
-        this.ip = sourceIp;
-        this.requestDate = requestDate;
+        this.ip = ip;
+        this.date = date;
         this.requestType = requestType;
         this.result = result;
         this.additionalInfo = additionalInfo;
@@ -45,12 +45,12 @@ public class Request {
         this.ip = ip;
     }
 
-    public Date getRequestDate() {
-        return requestDate;
+    public Date getDate() {
+        return date;
     }
 
-    public void setRequestDate(Date requestDate) {
-        this.requestDate = requestDate;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public String getRequestType() {
@@ -86,7 +86,7 @@ public class Request {
 
         if (id != request.id) return false;
         if (ip != null ? !ip.equals(request.ip) : request.ip != null) return false;
-        if (requestDate != null ? !requestDate.equals(request.requestDate) : request.requestDate != null) return false;
+        if (date != null ? !date.equals(request.date) : request.date != null) return false;
         if (requestType != null ? !requestType.equals(request.requestType) : request.requestType != null) return false;
         if (result != null ? !result.equals(request.result) : request.result != null) return false;
         return additionalInfo != null ? additionalInfo.equals(request.additionalInfo) : request.additionalInfo == null;
@@ -96,7 +96,7 @@ public class Request {
     public int hashCode() {
         int result1 = (int) (id ^ (id >>> 32));
         result1 = 31 * result1 + (ip != null ? ip.hashCode() : 0);
-        result1 = 31 * result1 + (requestDate != null ? requestDate.hashCode() : 0);
+        result1 = 31 * result1 + (date != null ? date.hashCode() : 0);
         result1 = 31 * result1 + (requestType != null ? requestType.hashCode() : 0);
         result1 = 31 * result1 + (result != null ? result.hashCode() : 0);
         result1 = 31 * result1 + (additionalInfo != null ? additionalInfo.hashCode() : 0);
@@ -108,7 +108,7 @@ public class Request {
         return "Request{" +
                 "id=" + id +
                 ", ip='" + ip + '\'' +
-                ", requestDate=" + requestDate +
+                ", date=" + date +
                 ", requestType='" + requestType + '\'' +
                 ", result='" + result + '\'' +
                 ", additionalInfo='" + additionalInfo + '\'' +

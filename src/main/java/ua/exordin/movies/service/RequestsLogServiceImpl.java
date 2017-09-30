@@ -32,7 +32,7 @@ public class RequestsLogServiceImpl implements RequestsLogService {
     private void log(HttpServletRequest hsr, Date date, Statuses status) {
         Request request = new Request();
         request.setIp(UsingThisTo.extractIpFromRequest(hsr));
-        request.setRequestDate(date);
+        request.setDate(date);
         request.setRequestType(hsr.getMethod());
         request.setResult(status.toString());
         request.setAdditionalInfo(hsr.getRequestURI());

@@ -210,8 +210,8 @@ public class MovieController {
         Movie foundMovie = movieService.findMovie(id);
 
         if (foundMovie == null) {
-            logger.error("Failed to rate Movie with id: {}", id);
-            responseEntity = new ResponseEntity(String.format("Failed to rate Movie with id: %d", id),
+            logger.error("Failed to rate Movie with id: {}. It does not exist.", id);
+            responseEntity = new ResponseEntity(String.format("Failed to rate Movie with id: %d. It does not exist.", id),
                     HttpStatus.NOT_FOUND);
         } else {
             Rate currentMovieRate = new Rate();

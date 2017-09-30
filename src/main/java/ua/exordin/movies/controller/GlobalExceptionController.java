@@ -1,5 +1,7 @@
 package ua.exordin.movies.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -30,6 +32,20 @@ public class GlobalExceptionController {
                 .collect(Collectors.joining(", ")));
 
         return model;
+
+    }
+
+    @ExceptionHandler(org.hibernate.exception.ConstraintViolationException.class)
+    public ResponseEntity<String> handle(org.hibernate.exception.ConstraintViolationException cve) {
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("Error message: ");
+        sb.append(cve.getLocalizedMessage());
+        sb.append("\n");
+        sb.append("Caused: ");
+        sb.append(cve.getSQLException());
+
+        return new ResponseEntity<>(sb.toString(), HttpStatus.CONFLICT);
 
     }
 
