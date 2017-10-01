@@ -1,6 +1,8 @@
 package ua.exordin.movies.util;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.Date;
+import java.time.LocalDate;
 
 public class UsingThisTo {
 
@@ -23,10 +25,14 @@ public class UsingThisTo {
         String userAgent = "";
 
         if (request != null) {
-            userAgent = request.getHeader("User-Agent");
+            userAgent = request.getHeader(Constants.USER_AGENT);
         }
 
         return userAgent;
+    }
+
+    public static Date getCurrentDate() {
+        return Date.valueOf(LocalDate.now());
     }
 
     /*

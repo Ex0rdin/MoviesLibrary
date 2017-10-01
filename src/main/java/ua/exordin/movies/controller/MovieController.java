@@ -43,7 +43,7 @@ public class MovieController {
     @PostMapping(Constants.ENTITY + "/")
     public ResponseEntity<Movie> createMovie(@RequestBody Movie movie, HttpServletRequest httpServletRequest/*UriComponentsBuilder compBuilder*/) {
         logger.info("Creating new Movie record : {}", movie);
-        Date dateNow = getNow();
+        Date dateNow = UsingThisTo.getCurrentDate();
         requestsLogService.logReceived(httpServletRequest, dateNow);
         Movie savedMovie = movieService.saveMovie(movie);
 //
@@ -65,10 +65,10 @@ public class MovieController {
     @GetMapping(Constants.ENTITY + "/{id}")
     public ResponseEntity<?> getMovie(@PathVariable("id") long id, HttpServletRequest httpServletRequest) {
         logger.info("Getting Movie {}", id);
-        Date dateNow = getNow();
+        Date dateNow = UsingThisTo.getCurrentDate();
         requestsLogService.logReceived(httpServletRequest, dateNow);
 
-        ResponseEntity responseEntity = null;
+        ResponseEntity responseEntity;
 
         Movie movie = movieService.findMovie(id);
 
@@ -91,10 +91,10 @@ public class MovieController {
     @GetMapping(Constants.ENTITY + "/")
     public ResponseEntity<List<Movie>> listAllMovies(HttpServletRequest httpServletRequest) {
         logger.info("Retrieving all movies");
-        Date dateNow = getNow();
+        Date dateNow = UsingThisTo.getCurrentDate();
         requestsLogService.logReceived(httpServletRequest, dateNow);
 
-        ResponseEntity responseEntity = null;
+        ResponseEntity responseEntity;
 
         List<Movie> movies = movieService.findAllMovies();
         if (movies.isEmpty()) {
@@ -119,10 +119,10 @@ public class MovieController {
     public ResponseEntity<?> updateMovie(@RequestBody Movie movie, HttpServletRequest httpServletRequest) {
         long movieId = movie.getId();
         logger.info("Updating Movie with id: {}", movieId);
-        Date dateNow = getNow();
+        Date dateNow = UsingThisTo.getCurrentDate();
         requestsLogService.logReceived(httpServletRequest, dateNow);
 
-        ResponseEntity responseEntity = null;
+        ResponseEntity responseEntity;
 
         Movie foundMovie = movieService.findMovie(movieId);
 
@@ -155,10 +155,10 @@ public class MovieController {
     @DeleteMapping(Constants.ENTITY + "/{id}")
     public ResponseEntity<?> deleteMovie(@PathVariable("id") long id, HttpServletRequest httpServletRequest) {
         logger.info("Deleting Movie with id: {}" , id);
-        Date dateNow = getNow();
+        Date dateNow = UsingThisTo.getCurrentDate();
         requestsLogService.logReceived(httpServletRequest, dateNow);
 
-        ResponseEntity responseEntity = null;
+        ResponseEntity responseEntity;
 
         Movie movie = movieService.findMovie(id);
         if (movie == null) {
@@ -183,7 +183,7 @@ public class MovieController {
     @DeleteMapping(Constants.ENTITY + "/")
     public ResponseEntity<?> deleteAllMovies(HttpServletRequest httpServletRequest) {
         logger.info("WARNING! Deleting all Movies!");
-        Date dateNow = getNow();
+        Date dateNow = UsingThisTo.getCurrentDate();
         requestsLogService.logReceived(httpServletRequest, dateNow);
 
         movieService.deleteAllMovies();
@@ -202,10 +202,10 @@ public class MovieController {
     public ResponseEntity<?> rateMovie(@PathVariable("id") long id, @RequestParam("rate") int rate,
                                        HttpServletRequest httpServletRequest) {
         logger.info("Adding rating for Movie with id: {}", id);
-        Date dateNow = getNow();
+        Date dateNow = UsingThisTo.getCurrentDate();
         requestsLogService.logReceived(httpServletRequest, dateNow);
         
-        ResponseEntity responseEntity = null;
+        ResponseEntity responseEntity;
 
         Movie foundMovie = movieService.findMovie(id);
 
@@ -226,10 +226,6 @@ public class MovieController {
         }
 
         return responseEntity;
-    }
-
-    private Date getNow() {
-        return Date.valueOf(LocalDate.now());
     }
 
 }

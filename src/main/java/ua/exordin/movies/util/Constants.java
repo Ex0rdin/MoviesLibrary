@@ -7,4 +7,5 @@ public interface Constants {
     String RATING = "/rate";
 
     String X_FORWARDED_FOR = "X-FORWARDED-FOR";
+    String USER_AGENT = "User-Agent";
 }

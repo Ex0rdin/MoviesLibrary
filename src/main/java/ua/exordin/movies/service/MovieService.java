@@ -17,6 +17,4 @@ public interface MovieService {
     List<Movie> findAllMovies();
 
     void deleteAllMovies();
-
-    boolean isMovieExist(Movie movie);
 }

@@ -42,9 +42,4 @@ public class MovieServiceImpl implements MovieService {
     public void deleteAllMovies() {
         movieRepository.deleteAll();
     }
-
-    @Override
-    public boolean isMovieExist(Movie movie) {
-        return false;
-    }
 }
