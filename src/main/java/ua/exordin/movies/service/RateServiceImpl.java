@@ -23,6 +23,9 @@ public class RateServiceImpl implements RateService{
     @Override
     public void rateMovie(Rate rate, Movie movie) {
 
+        /*DISCLAIMER*/
+        /*TRANSACTION MANAGER MUST BE INVOLVED HERE SINCE FOLLOWING SET OF OPERATIONS ARE NOT ACID*/
+
         if (0 > rate.getMark() || rate.getMark() > 5) {
             throw new ConstraintViolationException("Mark is out of range. Must be from 0 to 5", null);
         }

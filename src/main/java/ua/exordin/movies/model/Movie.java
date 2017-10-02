@@ -103,6 +103,10 @@ public class Movie {
 
     @Override
     public int hashCode() {
+
+        /*DISCLAIMER*/
+        /*DO NOT INCLUDE ID IN HASHCODE CALCULATION WHEN USING WITH JPA*/
+
         int result = name != null ? name.hashCode() : 0;
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (premierDate != null ? premierDate.hashCode() : 0);

@@ -94,6 +94,10 @@ public class Request {
 
     @Override
     public int hashCode() {
+
+        /*DISCLAIMER*/
+        /*DO NOT INCLUDE ID IN HASHCODE CALCULATION WHEN USING WITH JPA*/
+
         int result1 = ip != null ? ip.hashCode() : 0;
         result1 = 31 * result1 + (date != null ? date.hashCode() : 0);
         result1 = 31 * result1 + (requestType != null ? requestType.hashCode() : 0);

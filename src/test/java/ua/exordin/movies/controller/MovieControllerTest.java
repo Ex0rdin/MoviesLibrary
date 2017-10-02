@@ -65,6 +65,10 @@ public class MovieControllerTest {
         };
     }
 
+    /*DISCLAIMER*/
+    /*THESE TESTS ARE ACTUALLY TESTING IMPLEMENTATION WITH FLAWS*/
+    /*SEE CONTROLLER ENDPOINTS FOR EXPLANATION*/
+
     @Test
     public void saveMovieTest() throws Exception {
         Movie movie = TestDataBuilder.constructSingleMovieEntitity1().get(0);

@@ -80,6 +80,10 @@ public class Rate {
 
     @Override
     public int hashCode() {
+
+        /*DISCLAIMER*/
+        /*DO NOT INCLUDE ID IN HASHCODE CALCULATION WHEN USING WITH JPA*/
+
         int result = ip != null ? ip.hashCode() : 0;
         result = 31 * result + (browserFingerprint != null ? browserFingerprint.hashCode() : 0);
         result = 31 * result + mark;

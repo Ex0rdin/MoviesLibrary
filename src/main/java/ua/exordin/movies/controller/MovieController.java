@@ -41,6 +41,13 @@ public class MovieController {
      */
     @PostMapping(Constants.ENTITY + "/")
     public ResponseEntity<Movie> createMovie(@RequestBody Movie movie, HttpServletRequest httpServletRequest/*UriComponentsBuilder compBuilder*/) {
+
+        /*DISCLAIMER*/
+        /*BAD PRACTICE TO PERFORM PERFORM ANY LOGIC IN ENDPOINT METHOD*/
+        /*ITS ONLY PURPOSE TO RECEIVE REQUEST AND DELEGATE IT TO CORRESPONDING SERVICE*/
+        /*CONSIDER IT IN DEVELOPMENT*/
+        /*BUT SUCH SOLUTION WORKS*/
+
         logger.info("Creating new Movie record : {}", movie);
         Date dateNow = UsingThisTo.getCurrentDate();
         requestsLogService.logReceived(httpServletRequest, dateNow);
@@ -63,6 +70,13 @@ public class MovieController {
     @SuppressWarnings("unchecked")
     @GetMapping(Constants.ENTITY + "/{id}")
     public ResponseEntity<?> getMovie(@PathVariable("id") long id, HttpServletRequest httpServletRequest) {
+
+        /*DISCLAIMER*/
+        /*BAD PRACTICE TO PERFORM PERFORM ANY LOGIC IN ENDPOINT METHOD*/
+        /*ITS ONLY PURPOSE TO RECEIVE REQUEST AND DELEGATE IT TO CORRESPONDING SERVICE*/
+        /*CONSIDER IT IN DEVELOPMENT*/
+        /*BUT SUCH SOLUTION WORKS*/
+
         logger.info("Getting Movie {}", id);
         Date dateNow = UsingThisTo.getCurrentDate();
         requestsLogService.logReceived(httpServletRequest, dateNow);
@@ -89,6 +103,13 @@ public class MovieController {
      */
     @GetMapping(Constants.ENTITY + "/")
     public ResponseEntity<List<Movie>> listAllMovies(HttpServletRequest httpServletRequest) {
+
+        /*DISCLAIMER*/
+        /*BAD PRACTICE TO PERFORM PERFORM ANY LOGIC IN ENDPOINT METHOD*/
+        /*ITS ONLY PURPOSE TO RECEIVE REQUEST AND DELEGATE IT TO CORRESPONDING SERVICE*/
+        /*CONSIDER IT IN DEVELOPMENT*/
+        /*BUT SUCH SOLUTION WORKS*/
+
         logger.info("Retrieving all movies");
         Date dateNow = UsingThisTo.getCurrentDate();
         requestsLogService.logReceived(httpServletRequest, dateNow);
@@ -116,6 +137,13 @@ public class MovieController {
     @SuppressWarnings("unchecked")
     @PutMapping(Constants.ENTITY + "/")
     public ResponseEntity<?> updateMovie(@RequestBody Movie movie, HttpServletRequest httpServletRequest) {
+
+        /*DISCLAIMER*/
+        /*BAD PRACTICE TO PERFORM PERFORM ANY LOGIC IN ENDPOINT METHOD*/
+        /*ITS ONLY PURPOSE TO RECEIVE REQUEST AND DELEGATE IT TO CORRESPONDING SERVICE*/
+        /*CONSIDER IT IN DEVELOPMENT*/
+        /*BUT SUCH SOLUTION WORKS*/
+
         long movieId = movie.getId();
         logger.info("Updating Movie with id: {}", movieId);
         Date dateNow = UsingThisTo.getCurrentDate();
@@ -153,6 +181,13 @@ public class MovieController {
     @SuppressWarnings("unchecked")
     @DeleteMapping(Constants.ENTITY + "/{id}")
     public ResponseEntity<?> deleteMovie(@PathVariable("id") long id, HttpServletRequest httpServletRequest) {
+
+        /*DISCLAIMER*/
+        /*BAD PRACTICE TO PERFORM PERFORM ANY LOGIC IN ENDPOINT METHOD*/
+        /*ITS ONLY PURPOSE TO RECEIVE REQUEST AND DELEGATE IT TO CORRESPONDING SERVICE*/
+        /*CONSIDER IT IN DEVELOPMENT*/
+        /*BUT SUCH SOLUTION WORKS*/
+
         logger.info("Deleting Movie with id: {}" , id);
         Date dateNow = UsingThisTo.getCurrentDate();
         requestsLogService.logReceived(httpServletRequest, dateNow);
@@ -181,6 +216,13 @@ public class MovieController {
      */
     @DeleteMapping(Constants.ENTITY + "/")
     public ResponseEntity<?> deleteAllMovies(HttpServletRequest httpServletRequest) {
+
+        /*DISCLAIMER*/
+        /*BAD PRACTICE TO PERFORM PERFORM ANY LOGIC IN ENDPOINT METHOD*/
+        /*ITS ONLY PURPOSE TO RECEIVE REQUEST AND DELEGATE IT TO CORRESPONDING SERVICE*/
+        /*CONSIDER IT IN DEVELOPMENT*/
+        /*BUT SUCH SOLUTION WORKS*/
+
         logger.info("WARNING! Deleting all Movies!");
         Date dateNow = UsingThisTo.getCurrentDate();
         requestsLogService.logReceived(httpServletRequest, dateNow);
@@ -200,6 +242,12 @@ public class MovieController {
     @PostMapping(Constants.ENTITY + Constants.RATING + "/{id}")
     public ResponseEntity<?> rateMovie(@PathVariable("id") long id, @RequestParam("rate") int rate,
                                        HttpServletRequest httpServletRequest) {
+        /*DISCLAIMER*/
+        /*BAD PRACTICE TO PERFORM PERFORM ANY LOGIC IN ENDPOINT METHOD*/
+        /*ITS ONLY PURPOSE TO RECEIVE REQUEST AND DELEGATE IT TO CORRESPONDING SERVICE*/
+        /*CONSIDER IT IN DEVELOPMENT*/
+        /*BUT SUCH SOLUTION WORKS*/
+
         logger.info("Adding rating for Movie with id: {}", id);
         Date dateNow = UsingThisTo.getCurrentDate();
         requestsLogService.logReceived(httpServletRequest, dateNow);
