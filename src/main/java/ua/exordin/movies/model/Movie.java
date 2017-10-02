@@ -103,8 +103,7 @@ public class Movie {
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (name != null ? name.hashCode() : 0);
+        int result = name != null ? name.hashCode() : 0;
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (premierDate != null ? premierDate.hashCode() : 0);
         result = 31 * result + durationInMinutes;

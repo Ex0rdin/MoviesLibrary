@@ -16,7 +16,6 @@ import ua.exordin.movies.util.Constants;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Date;
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -213,6 +212,7 @@ public class MovieController {
             logger.error("Failed to rate Movie with id: {}. It does not exist.", id);
             responseEntity = new ResponseEntity(String.format("Failed to rate Movie with id: %d. It does not exist.", id),
                     HttpStatus.NOT_FOUND);
+            requestsLogService.logFailure(httpServletRequest, dateNow);
         } else {
             Rate currentMovieRate = new Rate();
             currentMovieRate.setIp(UsingThisTo.extractIpFromRequest(httpServletRequest));
@@ -223,6 +223,7 @@ public class MovieController {
             rateService.rateMovie(currentMovieRate, foundMovie);
 
             responseEntity = new ResponseEntity<>(foundMovie, HttpStatus.CREATED);
+            requestsLogService.logSuccess(httpServletRequest, dateNow);
         }
 
         return responseEntity;

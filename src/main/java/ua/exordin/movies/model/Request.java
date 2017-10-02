@@ -94,8 +94,7 @@ public class Request {
 
     @Override
     public int hashCode() {
-        int result1 = (int) (id ^ (id >>> 32));
-        result1 = 31 * result1 + (ip != null ? ip.hashCode() : 0);
+        int result1 = ip != null ? ip.hashCode() : 0;
         result1 = 31 * result1 + (date != null ? date.hashCode() : 0);
         result1 = 31 * result1 + (requestType != null ? requestType.hashCode() : 0);
         result1 = 31 * result1 + (result != null ? result.hashCode() : 0);

@@ -4,6 +4,11 @@ import java.sql.Date;
 
 public interface TestConstants {
 
+    //=== Common
+
+    String REMOTE_ADDR = "qwe.rty.0.1";
+    String USER_AGENT_VALUE = "Big Funny Browser";
+
     //=== Movie section
 
     long ID_1 = 1L;

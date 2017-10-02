@@ -80,8 +80,7 @@ public class Rate {
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (ip != null ? ip.hashCode() : 0);
+        int result = ip != null ? ip.hashCode() : 0;
         result = 31 * result + (browserFingerprint != null ? browserFingerprint.hashCode() : 0);
         result = 31 * result + mark;
         result = 31 * result + (int) (movieId ^ (movieId >>> 32));
