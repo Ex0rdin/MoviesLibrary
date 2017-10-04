@@ -40,8 +40,8 @@ CREATE TABLE public."ratings"
    "browser_fingerprint" text,
    "mark" smallint,
    "movie_id" bigint,
-   CONSTRAINT "ip_unique" UNIQUE ("ip"),
-   CONSTRAINT "browser_fingerprint_unique" UNIQUE ("browser_fingerprint"),
+   CONSTRAINT "ip_movieid_unique" UNIQUE ("ip", "movie_id"),
+   CONSTRAINT "browser_fingerprint_movieid_unique" UNIQUE ("browser_fingerprint", "movie_id"),
    CONSTRAINT "movie_id_fk" FOREIGN KEY ("movie_id") REFERENCES public."movies" ("id") ON UPDATE CASCADE ON DELETE SET NULL,
    CONSTRAINT "ratings.id_pk" PRIMARY KEY ("id")
 )
