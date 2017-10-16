@@ -11,5 +11,3 @@ public class MoviesApp {
         SpringApplication.run(MoviesApp.class, args);
     }
 }
-
-// Here are some comments
